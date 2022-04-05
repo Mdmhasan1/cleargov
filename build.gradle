@@ -1,13 +1,11 @@
-group 'project'
+group 'Project'
 version '1.0-SNAPSHOT'
-
 apply plugin: 'java'
 apply plugin: 'idea'
-
+apply plugin: "io.qameta.allure"
 configurations {
     cucumberRuntime.extendsFrom testRuntime
 }
-
 task cleanUPfiles() {
     doLast {
         def gradle = project.getGradle()
@@ -20,14 +18,28 @@ task cleanUPfiles() {
     }
     outputs.upToDateWhen { false }
 }
-
-
 compileJava {
     sourceCompatibility = 1.9
     targetCompatibility = 1.9
 }
-
-
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.qameta.allure:allure-gradle:2.8.0"
+    }
+}
+allure {
+    version = '2.13.5'
+    autoconfigure = false
+    aspectjweaver = true
+    useTestNG() {
+        version = "2.13.0"
+    }
+}
 task cucumber() {
     dependsOn assemble, compileTestJava
     doLast {
@@ -37,72 +49,63 @@ task cucumber() {
             args = ['--plugin', 'pretty',
                     '--plugin', 'json:build/reports/cucumber-report.json',
                     '--plugin', 'html:build/reports/cucumber-report.html',
+                    '--plugin', 'io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm',
                     '--glue', 'stepDefinitions',
                     'src/test/resources']
-            systemProperty "cucumber.options", System.getProperty("cucumber.options")
-            systemProperty "env", System.getProperty("env")
-            systemProperty "pushUser", System.getProperty("pushUser")
-            systemProperty "browser", System.getProperty("browser")
-            systemProperty "device", System.getProperty("device")
-            systemProperty "apiBase", System.getProperty("apiBase")
-            systemProperty "project", System.getProperty("project")
-            systemProperty "version", System.getProperty("version")
         }
     }
 }
-
 tasks.withType(Test) {
     systemProperties = System.getProperties()
-    systemProperties.remove("java.endorsed.dirs")
 }
-
 task runScenariosInParallel(type: Test) {
     useTestNG()
-
     include '**/suite/TestSuite.class'
     outputs.upToDateWhen { false }
 }
-
 repositories {
     mavenCentral()
     jcenter()
 }
 dependencies {
-    compile 'org.seleniumhq.selenium:selenium-server:2.44.0'
+    implementation 'org.seleniumhq.selenium:selenium-server:2.44.0'
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
-    compile 'io.github.prashant-ramcharan:courgette-jvm:3.0.0'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
+    implementation group: 'io.github.prashant-ramcharan', name: 'courgette-jvm', version: '3.3.0'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.0.7'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.0.7'
     // https://mvnrepository.com/artifact/org.json/json
-    compile group: 'org.json', name: 'json', version: '20180130'
+    implementation group: 'org.json', name: 'json', version: '20180130'
     // https://mvnrepository.com/artifact/com.couchbase.client/java-client
 //    compile group: 'com.couchbase.client', name: 'java-client', version: '2.2.7'
     // https://mvnrepository.com/artifact/joda-time/joda-time
-    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+    implementation group: 'joda-time', name: 'joda-time', version: '2.9.9'
     // https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java
-    compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
+    implementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
     // https://mvnrepository.com/artifact/commons-lang/commons-lang
-    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
     // https://mvnrepository.com/artifact/io.appium/java-client
-    compile group: 'io.appium', name: 'java-client', version: '6.0.0'
+    implementation group: 'io.appium', name: 'java-client', version: '7.5.0'
     // https://mvnrepository.com/artifact/com.codepine.api/testrail-api-java-client
-    compile group: 'com.codepine.api', name: 'testrail-api-java-client', version: '2.0.0'
+    implementation group: 'com.codepine.api', name: 'testrail-api-java-client', version: '2.0.0'
     // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
-    compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.4.0.jre8'
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.4.0.jre8'
     // https://mvnrepository.com/artifact/com.github.bogdanlivadariu/gif-webdriver
-    compile group: 'com.github.bogdanlivadariu', name: 'gif-webdriver', version: '1.0.2'
+    implementation group: 'com.github.bogdanlivadariu', name: 'gif-webdriver', version: '1.0.2'
     // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.0'
+    implementation group: 'io.rest-assured', name: 'rest-assured', version: '3.1.0'
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
-    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-configuration2
-    compile group: 'org.apache.commons', name: 'commons-configuration2', version: '2.3'
+    implementation group: 'org.apache.commons', name: 'commons-configuration2', version: '2.3'
     // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
-    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.4'
-    compile group: 'net.lightbody.bmp', name: 'browsermob-core', version: '2.1.5'
-    compile 'org.jsoup:jsoup:1.12.1'
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.4'
+    implementation group: 'net.lightbody.bmp', name: 'browsermob-core', version: '2.1.5'
+    implementation 'org.jsoup:jsoup:1.12.1'
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    implementation group: 'io.qameta.allure', name: 'allure-cucumber4-jvm', version: '2.13.0'
+    implementation group: 'io.qameta.allure', name: 'allure-testng', version: '2.13.0'
 }

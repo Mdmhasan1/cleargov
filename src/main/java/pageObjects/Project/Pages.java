@@ -38,13 +38,15 @@ public class Pages extends BasePage {
         }
         try {
             String newURL = new URIBuilder(URL)
-                    .addParameter("xid", "test_xid")
-                    .addParameter("test_ads", "onctest1")
                     .addParameter("cid", "my_cid").toString();
             driver.get(newURL);
         } catch (URISyntaxException e) {
             info("Failed to append URL with parameter");
         }
+    }
+
+    public void openPageFromParam(String pageName) {
+        openClearGovPage(getUrl(pageName));
     }
 
     private Properties loadPropertiesFile() {

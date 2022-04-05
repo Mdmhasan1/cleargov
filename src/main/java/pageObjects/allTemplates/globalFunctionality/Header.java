@@ -9,12 +9,11 @@ import java.util.Arrays;
 import static pageObjects.allTemplates.BaseSelectors.map;
 
 public class Header extends BasePage {
-
-    private final By mptHeaderLogo = By.cssSelector(".mpt_logo");
-
-    private ArrayList<String> moreOptionSubmenuLinksTitles = new ArrayList<>(Arrays.asList("AAD Reading Room", "ACR Reading Room", "AGA Reading Room", "ASCO Reading Room", "Endocrine Society Reading Room", "IDSA Reading Room"));
+        private final By CaseStudies = By.xpath(".top-nav-panel-content.nomob .form-control.header-search");
+        //private final By selectOption = By.xpath("(//div[@class='top-nav-panel-content nomob']//div[@class='angucomplete-title'])[1]");
 
     public Header() {
-        map.put("MPT header logo", mptHeaderLogo);
+
+        map.put("Case Studies", CaseStudies);
     }
 }

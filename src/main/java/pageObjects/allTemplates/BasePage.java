@@ -55,6 +55,14 @@ public class BasePage {
         }
     }
 
+    public void openClearGovPage(String url) {
+        log("URL - " + settings.getEnvironment() + url);
+        driver.get(settings.getEnvironment() + url);
+        if (isDesktop()) {
+            driver.manage().window().maximize();
+        }
+    }
+
     public static Element find(By by) {
         Element element = new Element(null);
         WebDriverWait wait = new WebDriverWait(driver, 15);

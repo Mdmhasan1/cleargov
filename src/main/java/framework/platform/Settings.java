@@ -53,12 +53,12 @@ public class Settings extends BasePage {
         return getProperty("env.stage.url");
     }
 
-    public String getQA1Url() {
-        return getProperty("env.qa1.url");
+    public String getDEVUrl() {
+        return getProperty("env.dev.url");
     }
 
-    public String getQA2Url() {
-        return getProperty("env.qa2.url");
+    public String getPreProdUrl() {
+        return getProperty("env.preprod.url");
     }
 
     public String getEnv() {
@@ -120,10 +120,10 @@ public class Settings extends BasePage {
                 return getProdUrl();
             case "stage":
                 return getStageUrl();
-            case "qa1":
-                return getQA1Url();
-            case "qa2":
-                return getQA2Url();
+            case "dev":
+                return getDEVUrl();
+            case "preprod":
+                return getPreProdUrl();
             default:
                 log("Incorrect or empty environment was added" + getEnv());
         }

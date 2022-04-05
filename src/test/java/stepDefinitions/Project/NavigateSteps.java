@@ -1,6 +1,7 @@
 package stepDefinitions.Project;
 
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import framework.Logger;
 import framework.platform.utilities.DataBase.DBUtils;
@@ -35,6 +36,11 @@ public class NavigateSteps {
     @When("^I go to \"([^\"]*)\"$")
     public void goTo(String page) {
         basePage.openPage(page);
+    }
+
+    @Given("^I go to( ORG| Preview|) \"([^\"]*)\" page$")
+    public void goToPage(String pageName) {
+            pages.openPageFromParam(pageName);
     }
 
     @And("I refresh page")
